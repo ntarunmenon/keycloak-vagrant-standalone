@@ -6,13 +6,19 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
+  config.vm.provision "docker" do |d|
+    d.pull_images "postgres"
+     d.run "postgres",
+      args: "-d -e POSTGRES_PASSWORD=password -e POSTGRES_USER=keycloak_db -p 5432:5432"
+  end
+
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "centos/6"
+  config.vm.box = "bento/centos-7.4"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -26,6 +32,7 @@ Vagrant.configure("2") do |config|
  # config.vm.network "forwarded_port", guest: 80, host: 8080
   config.vm.network "forwarded_port", guest: 9990, host: 9990
   config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 5432, host: 7000
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
